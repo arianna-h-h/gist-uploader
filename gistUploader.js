@@ -1,4 +1,5 @@
-console.log('Hello, Gist Uploader!!!');
-process.argv.forEach((val, index) => {
-  console.log(`${index}: ${val}`);
-});
+const fs = require('fs');
+
+fs.readFile(process.argv[2], (error, contents) => (
+  error ? console.log(error) : console.log(contents.toString())
+));
