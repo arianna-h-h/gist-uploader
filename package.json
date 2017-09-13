@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "test": "jest",
-    "upload": "node gist_uploader.js"
+    "upload": "node gistUploader.js"
   },
   "private": true,
   "devDependencies": {
