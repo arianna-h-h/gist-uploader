@@ -1,5 +1,11 @@
-const fs = require('fs');
 
-fs.readFile(process.argv[2], (error, contents) => (
-  error ? console.log(error) : console.log(contents.toString())
-));
+const axios = require('axios');
+
+axios.post(
+  'https://api.github.com/gists',
+  {
+    'files': { 'short.txt': { 'content': 'file contents' } },
+  },
+)
+  .then(response => (console.log(response)))
+  .catch(error => (console.log(error)));
