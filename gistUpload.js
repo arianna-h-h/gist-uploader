@@ -1,7 +1,11 @@
 const axios = require('axios');
-const fs = require('fs');
+const fileSystem = require('fs');
 
 const API_URL = 'https://api.github.com/gists';
+let finalString = '';
+const PROG_BAR = '=';
+const BAR_LENGTH = 30;
+const HANG_PERCENT = 0.25;
 
 /** This is a description of the uploadFile function
  * @param {string} contents - Contents of file from readFile
@@ -14,17 +18,35 @@ function uploadFile(contents, gist) {
     { files: post },
   )
     .then((response) => {
-      console.log(response.data.html_url);
+      console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
       return (response.data.html_url);
     })
     .catch(error => (error.response.status));
 }
 
+function addToFile(chunk) {
+  finalString += chunk;
+}
+
 function readFile(fileToContent, gistToName) {
-  fs.readFile(fileToContent, (error, contents) => (
-    error ? console.log(error) : uploadFile(contents.toString(), gistToName)
-  ));
+  const totalSize = fileSystem.statSync(process.argv[2]).size;
+  console.log(`Total size: ${totalSize}\nUpload progress:`);
+  const readStream = fileSystem.createReadStream(fileToContent);
+
+  readStream.on('data', (chunk) => {
+    try {
+      addToFile(chunk);
+      const prog = (Math.round((chunk.length / totalSize) * BAR_LENGTH));
+      process.stdout.write(`${PROG_BAR.repeat(prog - HANG_PERCENT)}`);
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+
+  readStream.on('close', () => {
+    uploadFile(finalString, gistToName);
+  });
 }
 
 
-module.exports = { uploadFile, readFile };
+module.exports = { readFile, uploadFile };
