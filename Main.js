@@ -1,10 +1,13 @@
 const { readFile } = require('./readFile.js');
 const { uploadFile } = require('./uploadFile.js');
+const gistUpload = require('./gistUpload.js');
 const fs = require('fs');
 const { isFile } = require('./isFile.js');
 
-const gistName = process.argv[3];
-const file = process.argv[2];
+const gistName = 'holdGistName';
+const fileArgs = process.argv;
+let fileArray = [];
+let array = [];
 
 // async function Runner() {
 //   const content = await readFile(file);
@@ -12,6 +15,7 @@ const file = process.argv[2];
 async function Runner() {
   const content = await readFile(file);
   await uploadFile(content, gistName);
+function Runner() {
   for (let i = 2; i < fileArgs.length; i = i + 2) {
     array.push({ name: fileArgs[i+1], content: fileArgs[i] });
   }
