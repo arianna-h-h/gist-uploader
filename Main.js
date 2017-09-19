@@ -1,47 +1,30 @@
+const fs = require('fs');
 const { readFile } = require('./readFile.js');
 const { uploadFile } = require('./uploadFile.js');
-const gistUpload = require('./gistUpload.js');
-const fs = require('fs');
 const { isFile } = require('./isFile.js');
 
-const gistName = 'holdGistName';
-const fileArgs = process.argv;
-let fileArray = [];
-let array = [];
+const contentAndNameList = process.argv;
+const objectList = [];
+const serializedList = [];
 
-// async function Runner() {
-//   const content = await readFile(file);
-//   await uploadFile(content, gistName);
 async function Runner() {
-  const content = await readFile(file);
-  await uploadFile(content, gistName);
-function Runner() {
-  for (let i = 2; i < fileArgs.length; i = i + 2) {
-    array.push({ name: fileArgs[i+1], content: fileArgs[i] });
+  for (let i = 2; i < contentAndNameList.length; i += 2) {
+    objectList.push({ name: contentAndNameList[i + 1], content: contentAndNameList[i] });
   }
-  for (let i = 0; i < array.length; i = i + 1) {
-    if (isFile(array[i].content)) {
-      fileArray.push(array[i]);
+  objectList.forEach((item) => {
+    if (isFile(item.content)) {
+      serializedList.push(item);
     } else {
-      console.log('is directory');
-      fs.readdirSync(array[i].content).forEach(fileFromDir =>
-        fileArray.push({
-          name: `${array[i].name}-${fileFromDir}`,
-          content: `${array[i].content}/${fileFromDir}`
+      fs.readdirSync(item.content).forEach(fileFromDir =>
+        serializedList.push({
+          name: `${item.name}-${fileFromDir}`,
+          content: `${item.content}/${fileFromDir}`,
         }));
-    } // by this point, I have array of file names to call read file on
-  }
-  console.log(fileArray);
+    }
+  });
 
-  // I need to call readFile on all of the fileNames
-
-  const contentArray = await readFile(fileArray);
-  await uploadFile(contentArray);
-
-  // // readFile will return array of objects with filename and contents
-  // // I will pass that array into upload file (as the key/value pairs)
-  // gistUpload.uploadFile(contentArray);
+  const filesToUpload = await readFile(serializedList);
+  await uploadFile(filesToUpload);
 }
-
 
 Runner();
