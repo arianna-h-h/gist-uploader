@@ -1,10 +1,7 @@
 const { readFile } = require('./readFile.js');
 const { uploadFile } = require('./uploadFile.js');
-<<<<<<< HEAD
-=======
 const fs = require('fs');
 const { isFile } = require('./isFile.js');
->>>>>>> 408b837... Add successful directory upload
 
 const gistName = process.argv[3];
 const file = process.argv[2];
@@ -13,10 +10,8 @@ const file = process.argv[2];
 //   const content = await readFile(file);
 //   await uploadFile(content, gistName);
 async function Runner() {
-<<<<<<< HEAD
   const content = await readFile(file);
   await uploadFile(content, gistName);
-=======
   for (let i = 2; i < fileArgs.length; i = i + 2) {
     array.push({ name: fileArgs[i+1], content: fileArgs[i] });
   }
@@ -42,7 +37,6 @@ async function Runner() {
   // // readFile will return array of objects with filename and contents
   // // I will pass that array into upload file (as the key/value pairs)
   // gistUpload.uploadFile(contentArray);
->>>>>>> 408b837... Add successful directory upload
 }
 
 
