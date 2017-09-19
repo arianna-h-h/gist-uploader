@@ -19,10 +19,15 @@ async function uploadFile(contents, gist) {
     throw new Error('Your gist name must be a string.');
   }
   const post = { [gist]: { content: contents } };
-  const response = await axios.post(
-    API_URL,
-    { files: post },
-  );
+  const response = await axios({
+    method: 'post',
+    url: API_URL,
+    auth: {
+      user: process.env.USER,
+      password: process.env.SECRET_TOKEN,
+    },
+    data: { files: post },
+  });
   console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
   return (response.data.html_url);
 }
