@@ -15,6 +15,7 @@
     "standard": "^10.0.3"
   },
   "dependencies": {
-    "axios": "^0.16.2"
+    "axios": "^0.16.2",
+    "dotenv": "^4.0.0"
   }
 }

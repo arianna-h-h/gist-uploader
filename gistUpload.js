@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fileSystem = require('fs');
+require('dotenv').config();
 
 const API_URL = 'https://api.github.com/gists';
 let finalString = '';
@@ -7,21 +8,26 @@ const PROG_BAR = '=';
 const BAR_LENGTH = 30;
 const HANG_PERCENT = 0.25;
 
+
 /** This is a description of the uploadFile function
- * @param {string} contents - Contents of file from readFile
+ * @param {string} content - Contents of file from readFile
  * @param {string} gist - Name of gist supplied by user
  */
-function uploadFile(contents, gist) {
-  const post = { [gist]: { content: contents } };
-  return axios.post(
-    API_URL,
-    { files: post },
-  )
+function uploadFile(content, gist) {
+  return axios({
+    method: 'post',
+    url: API_URL,
+    auth: {
+      user: process.env.USER,
+      password: process.env.SECRET_TOKEN,
+    },
+    data: { files: { [gist]: { content } } },
+  })
     .then((response) => {
       console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
       return (response.data.html_url);
     })
-    .catch(error => (error.response.status));
+    .catch(error => (console.log(error.response.data)));
 }
 
 function addToFile(chunk) {
