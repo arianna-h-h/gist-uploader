@@ -13,19 +13,22 @@ const API_URL = 'https://api.github.com/gists';
 async function uploadFile(files) {
   process.stdout.write('\nUploading...\n');
   const destructFiles = Object.assign({}, ...files);
-  if (!files) {
-    throw new Error('You must provide a files.');
+  try {
+    const response = await axios({
+      method: 'post',
+      url: API_URL,
+      auth: {
+        user: process.env.USERNAME,
+        password: process.env.SECRET_TOKEN,
+      },
+      data: { files: destructFiles },
+    });
+    console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
+    return ({ success: true, message: response.data.html_url }); // wrap in object
+  } catch (error) {
+    return ({ success: false, message: error.response.status });
   }
-  const response = await axios({
-    method: 'post',
-    url: API_URL,
-    auth: {
-      user: process.env.USERNAME,
-      password: process.env.SECRET_TOKEN,
-    },
-    data: { files: destructFiles },
-  });
-  return (response);
 }
 
-module.exports = uploadFile;
+
+module.exports = { uploadFile };
