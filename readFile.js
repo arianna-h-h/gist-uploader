@@ -1,8 +1,17 @@
 const fileSystem = require('fs');
 
 const PROG_BAR = '=';
-const BAR_LENGTH = 30;
 const HANG_PERCENT = 0.25;
+
+/** The progressBar function calculates the progress of the readStream.
+  * @param{number} length - length in bytes of current chunk of data.
+  * @param{number} size - total size in bytes of file(s) to be uploaded.
+  * @return{number} - percentage bytes read of total bytes to read.
+  */
+function progressBar(length, size) {
+  const BAR_LENGTH = 30;
+  return ((length / size) * BAR_LENGTH);
+}
 
 /** The readFile function accepts files and reads them
   * @param{string} fileToContent - A filename like example.txt
@@ -10,20 +19,18 @@ const HANG_PERCENT = 0.25;
   * If rejected, returns an error message.
   */
 async function readFile(filesToUpload) {
-  let promiseList = [];
   const totalSize = filesToUpload.reduce((size, fileName) => (
     size + fileSystem.statSync(fileName.content).size
   ), 0);
-
   console.log(`Total size: ${totalSize}\nUpload progress:`);
-  promiseList = filesToUpload.map((file) => {
+  const promises = filesToUpload.map((file) => {
     let finalContents = '';
     return new Promise((resolve, reject) => {
       try {
         const readStream = fileSystem.createReadStream(file.content);
         readStream.on('data', (chunk) => {
           finalContents += chunk;
-          const prog = ((chunk.length / totalSize) * BAR_LENGTH);
+          const prog = progressBar(chunk.length, totalSize);
           process.stdout.write(`${PROG_BAR.repeat(Math.round(prog - HANG_PERCENT))}`);
         });
         readStream.on('close', () => {
@@ -34,7 +41,7 @@ async function readFile(filesToUpload) {
       }
     });
   });
-  return Promise.all(promiseList).then(response => response);
+  return Promise.all(promises);
 }
 
 
