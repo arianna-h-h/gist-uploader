@@ -15,14 +15,14 @@ describe('When given no arguments or incorrect number of arguments', () => {
   it('Returns a new error message: you must provide a file and name.', () => {
     uploadFile()
       .catch((error) => {
-        expect(error.message).toEqual('You must provide a file and a name.');
+        expect(error.message).toEqual('You must provide a files.');
       });
   });
 
   it('Returns a new error message: you must provide a file and name.', () => {
     uploadFile('hello')
       .catch((error) => {
-        expect(error.message).toEqual('You must provide a file and a name.');
+        expect(error.message).toEqual('You must provide a files.');
       });
   });
 });
@@ -31,14 +31,14 @@ describe('When given non-string arguments', () => {
   it('Returns the error: Your file must contain a string.', () => {
     uploadFile(1)
       .catch((error) => {
-        expect(error.message).toEqual('Your file must contain a string.');
+        expect(error.message).toEqual('You must provide a files.');
       });
   });
 
   it('Returns the error: Your gist name must be a string.', () => {
     uploadFile('hello', 2)
       .catch((error) => {
-        expect(error.message).toEqual('Your gist name must be a string.');
+        expect(error.message).toEqual('You must provide a files.');
       });
   });
 });

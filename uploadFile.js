@@ -5,20 +5,15 @@ const API_URL = 'https://api.github.com/gists';
 
 /** The uploadFile function makes an AXIOS post request to github's API
  * to post a new gist.
- * @param {string} files - Contents of file from readFile
- * @param {string} gist - Name of gist supplied by user
+ * @param {Array} files - List of files and names to be uploaded.
  * @returns {Promise} - If resolved, returns a Promise with new gist's web address.
  * If rejected, returns a Promise with error message from github's API.
  */
 
 async function uploadFile(files) {
   const destructFiles = Object.assign({}, ...files);
-  if (!gist || !files) {
-    throw new Error('You must provide a file and a name.');
-  } else if (typeof files !== 'string') {
-    throw new Error('Your file must contain a string.');
-  } else if (typeof gist !== 'string') {
-    throw new Error('Your gist name must be a string.');
+  if (!files) {
+    throw new Error('You must provide a files.');
   }
   const response = await axios({
     method: 'post',
