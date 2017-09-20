@@ -13,18 +13,19 @@ const API_URL = 'https://api.github.com/gists';
 async function uploadFile(contents, gist) {
   if (!gist || !contents) {
     throw new Error('You must provide a file and a name.');
-  } else if (typeof contents !== 'string') {
-    throw new Error('Your file must contain a string.');
-  } else if (typeof gist !== 'string') {
-    throw new Error('Your gist name must be a string.');
   }
   const post = { [gist]: { content: contents } };
-  const response = await axios.post(
-    API_URL,
-    { files: post },
-  );
-  console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
-  return (response.data.html_url);
+  try {
+    const response = await axios.post(
+      API_URL,
+      { files: post },
+    );
+    console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
+    return ({ success: true, message: response.data.html_url }); // wrap in object
+  } catch (error) {
+    return ({ success: false, message: error.response.status });
+  }
 }
 
-module.exports = uploadFile;
+
+module.exports = { uploadFile };
