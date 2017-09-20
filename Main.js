@@ -1,4 +1,5 @@
 const fs = require('fs');
+const readLine = require('readline');
 const { readFile } = require('./readFile.js');
 const { uploadFile } = require('./uploadFile.js');
 const { isFile } = require('./isFile.js');
@@ -24,7 +25,20 @@ async function Runner() {
   });
 
   const filesToUpload = await readFile(serializedList);
-  await uploadFile(filesToUpload);
+  let response = await uploadFile(filesToUpload);
+  if (response === 'ENOTFOUND') {
+    console.log('There was a network error.\nHit [ENTER] to try again.');
+    const rl = readLine.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    rl.on('line', (async () => {
+        rl.close();
+        response = await uploadFile(filesToUpload);
+        console.log(response);
+      }
+    ));
+  }
 }
 
 Runner();

@@ -15,17 +15,21 @@ async function uploadFile(files) {
   if (!files) {
     throw new Error('You must provide a files.');
   }
-  const response = await axios({
-    method: 'post',
-    url: API_URL,
-    auth: {
-      user: process.env.USER,
-      password: process.env.SECRET_TOKEN,
-    },
-    data: { files: destructFiles },
-  });
-  console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
-  return (response.data.html_url);
+  try {
+    const response = await axios({
+      method: 'post',
+      url: API_URL,
+      auth: {
+        user: process.env.USER,
+        password: process.env.SECRET_TOKEN,
+      },
+      data: { files: destructFiles },
+    });
+    console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
+    return (response.data.html_url);
+  } catch (error) {
+    return (error.code);
+  }
 }
 
 module.exports = { uploadFile };
