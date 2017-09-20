@@ -4,6 +4,11 @@ const PROG_BAR = '=';
 const BAR_LENGTH = 30;
 const HANG_PERCENT = 0.25;
 
+/** The readFile function accepts files and reads them
+  * @param{string} fileToContent - A filename like example.txt
+  * @return{Promise} - If resolved, returns the data in the file as a string.
+  * If rejected, returns an error message.
+  */
 
 function readFile(fileToContent) {
   let finalString;
