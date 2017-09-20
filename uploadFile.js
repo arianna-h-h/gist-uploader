@@ -10,17 +10,21 @@ const API_URL = 'https://api.github.com/gists';
  * If rejected, returns a Promise with error message from github's API.
  */
 
-function uploadFile(contents, gist) {
+async function uploadFile(contents, gist) {
+  if (!gist || !contents) {
+    throw new Error('You must provide a file and a name.');
+  } else if (typeof contents !== 'string') {
+    throw new Error('Your file must contain a string.');
+  } else if (typeof gist !== 'string') {
+    throw new Error('Your gist name must be a string.');
+  }
   const post = { [gist]: { content: contents } };
-  return axios.post(
+  const response = await axios.post(
     API_URL,
     { files: post },
-  )
-    .then((response) => {
-      console.log(`\n\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
-      return (response.data.html_url);
-    })
-    .catch(error => (error.response.status));
+  );
+  console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
+  return (response.data.html_url);
 }
 
 module.exports = { uploadFile };

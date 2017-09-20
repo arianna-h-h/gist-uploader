@@ -2,7 +2,6 @@ const { uploadFile } = require('./uploadFile.js');
 const axios = require('axios');
 
 const mockResponse = { data: { html_url: 'string' } };
-const mockBadResponse = { response: { status: '422' } };
 
 describe('When given a string contents and a string gist', () => {
   it('Uploads file to github api as a gist', () => {
@@ -12,10 +11,34 @@ describe('When given a string contents and a string gist', () => {
   });
 });
 
-describe('When given no arguments', () => {
-  it('Returns a 422 error code', () => {
-    axios.post = jest.fn(() => Promise.reject(mockBadResponse));
-    uploadFile('hello', 'helloName')
-      .then((result) => { expect(result).toBe('422'); });
+describe('When given no arguments or incorrect number of arguments', () => {
+  it('Returns a new error message: you must provide a file and name.', () => {
+    uploadFile()
+      .catch((error) => {
+        expect(error.message).toEqual('You must provide a file and a name.');
+      });
+  });
+
+  it('Returns a new error message: you must provide a file and name.', () => {
+    uploadFile('hello')
+      .catch((error) => {
+        expect(error.message).toEqual('You must provide a file and a name.');
+      });
+  });
+});
+
+describe('When given non-string arguments', () => {
+  it('Returns the error: Your file must contain a string.', () => {
+    uploadFile(1)
+      .catch((error) => {
+        expect(error.message).toEqual('Your file must contain a string.');
+      });
+  });
+
+  it('Returns the error: Your gist name must be a string.', () => {
+    uploadFile('hello', 2)
+      .catch((error) => {
+        expect(error.message).toEqual('Your gist name must be a string.');
+      });
   });
 });
