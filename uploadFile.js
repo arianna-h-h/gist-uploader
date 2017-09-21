@@ -27,4 +27,4 @@ async function uploadFile(contents, gist) {
   return (response.data.html_url);
 }
 
-module.exports = { uploadFile };
+module.exports = uploadFile;

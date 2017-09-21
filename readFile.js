@@ -31,4 +31,4 @@ function readFile(fileToContent) {
   });
 }
 
-module.exports = { readFile };
+module.exports = readFile;

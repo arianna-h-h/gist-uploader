@@ -1,4 +1,4 @@
-const { uploadFile } = require('./uploadFile.js');
+const uploadFile = require('./uploadFile.js');
 const axios = require('axios');
 
 const mockResponse = { data: { html_url: 'string' } };
