@@ -59,6 +59,7 @@ async function readFile(filesToUpload) {
     return Promise.all(promises);
   } catch (error) {
     if (error.code === 'ENOENT') {
+      console.log('error code', error.code)
       return Promise.reject(new Error('Couldn\'t find that file or directory.'));
     }
     return Promise.reject(error.message);
