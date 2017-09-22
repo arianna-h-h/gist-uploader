@@ -10,7 +10,7 @@ const HANG_PERCENT = 0.25;
   * If rejected, returns an error message.
   */
 
-async function readFile(fileToContent) {
+async function readFile(fileToContent, dataCallbacks, closeCallback) {
   try {
     let finalString = '';
     const totalSize = fileSystem.statSync(fileToContent).size;
@@ -20,7 +20,7 @@ async function readFile(fileToContent) {
       try {
         readStream.on('data', (chunk) => {
           finalString += chunk;
-          const prog = ((chunk.length / totalSize) * BAR_LENGTH);
+          const prog = chunk.length / totalSize * BAR_LENGTH;
           process.stdout.write(`${PROG_BAR.repeat(Math.round(prog - HANG_PERCENT))}`);
         });
         readStream.on('close', () => {
@@ -32,7 +32,7 @@ async function readFile(fileToContent) {
     }).then(promise => Promise.resolve(promise));
   } catch (error) {
     if (error.code === 'ENOENT') {
-      return Promise.reject(new Error('Couldn\'t find that file or directory.'));
+      return Promise.reject(new Error("Couldn't find that file or directory."));
     }
     return Promise.reject(error.message);
   }

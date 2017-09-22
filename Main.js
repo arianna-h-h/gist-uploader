@@ -18,12 +18,47 @@ async function Runner(args) {
   }
 }
 
+function flattenDirectory(path) {} // return flattened array of filenames
 
-async function Main() {
-  const fileArg = process.argv.slice(2);
-  const result = await Runner(fileArg);
-  if (result.success !== true) {
-    await console.log(result);
+
+function progressBar(percentage) {
+  return // formatted progressBar
+}
+
+function displayProgressBar(totalSize, bytesRead) {
+  console.log(progressBar(bytesRead / totalSize));
+}
+
+// returns nested object containing { [filename]: contentsOfFile }
+function readFile(gistContents, path, displayProgressBar) {
+  // const contents = fs.readFileSync(path)
+  // some error handling
+  // return Object.assign({}, gistContents, { [path]: contents })
+}
+
+function uploadGist(gist) {} // returns gist url
+
+function displayError(message) {}
+
+if (require.main === module) {
+  const paths = process.argv.slice(2); => Array
+  if (paths.length === 0) {
+    throw new Error('Please pass a path to a file or directory');
+  }
+
+  // parse filenames
+  const flattenedPaths = flatMap(paths, flattenDirectory(path));
+
+  // extract content from the files into payload
+  const gists = flattenedPaths.reduce(readFile(gistContents, path, progressBar), {});
+
+  // post to gist api
+  try {
+    const url = await uploadGist(gist);
+    displaySuccess(url);
+  } catch (error) {
+    const message = error.message;
+    displayError(message);
   }
 }
 
