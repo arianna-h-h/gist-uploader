@@ -5,29 +5,27 @@ const API_URL = 'https://api.github.com/gists';
 
 /** The uploadFile function makes an AXIOS post request to github's API
  * to post a new gist.
- * @param {string} content - Contents of file from readFile
- * @param {string} gist - Name of gist supplied by user
+ * @param {Array} files - List of files and names to be uploaded.
  * @returns {Promise} - If resolved, returns a Promise with new gist's web address.
  * If rejected, returns a Promise with error message from github's API.
  */
 
-async function uploadFile(content, gist) {
-  if (!gist || !content) {
-    throw new Error('You must provide a file and a name.');
-  } else if (typeof content !== 'string') {
-    throw new Error('Your file must contain a string.');
-  } else if (typeof gist !== 'string') {
-    throw new Error('Your gist name must be a string.');
+async function uploadFile(files) {
+  process.stdout.write('\nUploading...\n');
+  const destructFiles = Object.assign({}, ...files);
+  if (!files) {
+    throw new Error('You must provide a files.');
   }
-  return axios({
+  const response = await axios({
     method: 'post',
     url: API_URL,
     auth: {
-      user: process.env.USER,
+      user: process.env.USERNAME,
       password: process.env.SECRET_TOKEN,
     },
-    data: { files: { [gist]: { content } } },
+    data: { files: destructFiles },
   });
+  return (response);
 }
 
 module.exports = uploadFile;
