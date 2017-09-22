@@ -12,7 +12,6 @@ async function Runner(args) {
       const filesToUpload = await readFile(serializedList);
       if (filesToUpload.message !== 'Couldn\'t find that file or directory.') {
         const response = await uploadFile(filesToUpload);
-        await clearScreen();
         return (response);
       }
     }
@@ -27,6 +26,9 @@ async function Main() {
   const result = await Runner(fileArg);
   if (result.success !== true) {
     await console.log(result);
+  } else {
+    clearScreen();
+    console.log(`\nYour gist is done uploading.\nView it at: ${result.message}`);
   }
 }
 

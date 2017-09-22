@@ -23,8 +23,7 @@ async function uploadFile(files) {
       },
       data: { files: destructFiles },
     });
-    console.log(`\nYour gist is done uploading.\nView it at: ${response.data.html_url}`);
-    return ({ success: true, message: response.data.html_url }); // wrap in object
+    return ({ success: true, message: response.data.html_url });
   } catch (error) {
     return ({ success: false, message: error.response.status });
   }
